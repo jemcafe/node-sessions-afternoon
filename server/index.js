@@ -5,11 +5,12 @@ require('dotenv').config();
 
 // Middleware
 const checkForSession = require('./middlewares/checkForSession');
-const swagController = require('./controllers/swag_controller');
-const cartController = require('./controllers/cart_controller');
 
 // Controllers
+const swagController = require('./controllers/swag_controller');
 const authController = require('./controllers/auth_controller');
+const cartController = require('./controllers/cart_controller');
+const searchController = require('./controllers/search_controller');
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use( session({
     saveUninitialized: true,
 }));
 app.use( checkForSession );
+app.use( express.static( __dirname + '/build' ) );
+
 
 // Swag - list of products that can be put in the users cart
 app.get('/api/swag', swagController.read);
@@ -34,6 +37,9 @@ app.get('/api/user', authController.getUser);
 app.post('/api/cart', cartController.add);
 app.post('/api/cart/checkout', cartController.checkout);
 app.delete('/api/cart', cartController.remove);
+
+//Search
+app.get('/api/search' ,searchController.search);
 
 
 const port = process.env.PORT || 3000;
