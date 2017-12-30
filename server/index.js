@@ -6,6 +6,7 @@ require('dotenv').config();
 // Middleware
 const checkForSession = require('./middlewares/checkForSession');
 const swagController = require('./controllers/swag_controller');
+const cartController = require('./controllers/cart_controller');
 
 // Controllers
 const authController = require('./controllers/auth_controller');
@@ -28,6 +29,11 @@ app.post('/api/login', authController.login);
 app.post('/api/register', authController.register);
 app.post('/api/signout', authController.signout);
 app.get('/api/user', authController.getUser);
+
+// Cart
+app.post('/api/cart', cartController.add);
+app.post('/api/cart/checkout', cartController.checkout);
+app.delete('/api/cart', cartController.remove);
 
 
 const port = process.env.PORT || 3000;

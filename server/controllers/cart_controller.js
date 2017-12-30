@@ -3,36 +3,34 @@ const swag = require('../models/swag');
 module.exports = {
     add: ( req, res, next ) => {
         const { id } = req.query;
-        const { cart, total } = req.session.user;
 
-        const index = cart.findIndex( e => e.id == id );
+        const index = req.session.user.cart.findIndex( swag => swag.id == id );
 
         if ( index === -1 ) {
-            const item = swag.find( e => e.id == id );
-
-            cart.push( item );
-            total += item.price;
+            const item = swag.find(swag => swag.id == id );
+            
+            req.session.user.cart.push( item );
+            req.session.user.total += item.price;
         }
         
-        res.status(200).send( user );
+        res.status(200).send( req.session.user );
     },   
     remove: ( req, res, next ) => {
         const { id } = req.query;
-        const { cart, total } = req.session.user;
         
         const item = swag.find( e => e.id == id );
 
         if ( item ) {
-          const index = cart.findIndex( swag => swag.id == id );
-          cart.splice(index, 1);
-          total -= item.price;
+          const index = req.session.user.cart.findIndex( swag => swag.id == id );
+          req.session.user.cart.splice(index, 1);
+          req.session.user.total -= item.price;
         }
         
         res.status(200).send( req.session.user );
     },   
     checkout: ( req, res, next ) => {
-        req.session.cart = [];
-        req.session.total = 0;
+        req.session.user.cart = [];
+        req.session.user.total = 0;
 
         res.status(200).send( req.session.user );
     },   
